@@ -1,0 +1,189 @@
+:root {
+  --bg-gradient: #8e62e7;
+
+  --panel-bg: #ffd8f2;
+  --accent: #5a4b6d;
+  --muted: #0a0a0a;
+
+  --btn-bg: #cfcfcf;
+  --btn-hover: #c6a9ff;
+  --btn-text: #111;
+
+  --radius: 16px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--accent);
+}
+
+/* Page wrapper */
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(180deg, #c9b8ff 0%, #e6c9f2 100%);
+
+  color: #4a3b63;
+  font-family: Inter, Arial, sans-serif;
+}
+
+/* Main card */
+.options-card {
+  width: 440px;
+  max-width: 90vw;
+
+  background: var(--panel-bg);
+  border-radius: 14px;
+
+  padding: 28px 30px 32px;
+
+  box-shadow: 0 14px 40px rgba(90, 75, 109, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: card-enter 0.45s ease-out;
+}
+
+.options-card h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Title */
+h1 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #020202;
+}
+
+/* Settings rows */
+.setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0;
+  gap: 12px;
+}
+
+.setting label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+label.checkbox {
+  justify-content: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* Number inputs */
+input[type="number"] {
+  width: 64px;
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  background: #ede4ff;
+  color: #0c0c0c;
+  text-align: center;
+  outline: none;
+}
+
+input[type="number"]:focus {
+  border-color: #c6a9ff;
+}
+
+/* Checkbox alignment */
+.setting input[type="checkbox"] {
+  transform: scale(1.1);
+}
+
+/* Save button */
+#save-btn {
+  margin-top: 18px;
+  width: 100%;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#save-btn:hover {
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(90, 75, 109, 0.2);
+}
+
+/* Save button states */
+#save-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+#save-btn.saving {
+  pointer-events: none;
+  background: #c6a9ff;
+  transform: scale(0.97);
+}
+
+/* Text animation */
+#save-btn span {
+  display: inline-block;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Paw */
+#save-btn::after {
+  content: "🐾";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%) scale(0);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#save-btn.saving::after {
+  transform: translateY(-50%) scale(1);
+  opacity: 1;
+}
+
+.icon {
+  font-size: 18px;
+  margin-right: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

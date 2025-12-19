@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>Pawmodoro</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="timer-area">
+        <h1 id="time">25:00</h1>
+        <div id="btn-container">
+          <button id="start-timer-btn">Start</button>
+          <button id="reset-timer-btn">Reset</button>
+          <button id="add-task-btn">Add Task</button>
+        </div>
+      </div>
+
+      <div id="cat-area">
+        <div id="cat-wrap">
+          <img id="cat-img" src="../images/cat_work.gif" alt="cat" />
+          <div id="sleep-overlay" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div id="task-area">
+        <div id="task-controls">
+          <label class="small">Alarm (mp3):</label>
+
+          <div class="audio-row">
+            <label for="audio-input" class="btn"> Choose file </label>
+
+            <span id="audio-filename" class="audio-filename">
+              No file chosen
+            </span>
+          </div>
+
+          <input id="audio-input" type="file" accept="audio/*" hidden />
+        </div>
+        <div id="task-container"></div>
+      </div>
+
+      <!-- hidden audio element that will play uploaded or default mp3 -->
+      <audio id="alarm-audio" preload="auto">
+        <source src="../alarm-default.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

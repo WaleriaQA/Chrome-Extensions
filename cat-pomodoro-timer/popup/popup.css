@@ -1,0 +1,222 @@
+:root {
+  --bg: linear-gradient(180deg, #ede4ff 0%, #f6e7f1 100%);
+  --panel: #ffffff;
+  --muted: #7a6f85;
+  --accent: #5a4b6d;
+  --hover: #c6a9ff;
+  --hover-text: #2f1f46;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 320px;
+  background: #f3e8ff;
+  font-family: Inter, Arial, sans-serif;
+}
+
+#container {
+  padding: 12px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #f3e8ff, #f9ecff);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(140, 90, 200, 0.25);
+}
+
+/* Timer area */
+#timer-area {
+  background: linear-gradient(180deg, #e9c6f5 0%, #f3cddd 100%);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(120, 80, 160, 0.15);
+}
+
+#time {
+  margin: 6px 0;
+  font-size: 44px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Buttons */
+#btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+#btn-container button {
+  background: #cfcfcf;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Shared button style */
+.btn {
+  display: inline-block;
+  background: #cfcfcf;
+  color: #111;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  user-select: none;
+}
+
+#btn-container button,
+.btn {
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Hover effect */
+#btn-container button:hover,
+.btn:hover {
+  background: var(--hover);
+  color: var(--hover-text);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(138, 94, 186, 0.35);
+}
+
+#btn-container button:active,
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(138, 94, 186, 0.25);
+}
+
+/* Hide real file input */
+#audio-input {
+  display: none;
+}
+
+/* Audio upload row */
+.audio-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.audio-filename {
+  font-size: 11px;
+  color: var(--muted);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-filename.loaded {
+  color: #cfcfcf;
+}
+
+/* Cat area */
+#cat-area {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+#cat-wrap {
+  width: 240px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+}
+
+/* Cat image */
+#cat-img {
+  max-height: 160px;
+  max-width: 240px;
+  border-radius: 8px;
+  transform-origin: center;
+  animation: breathe 4s ease-in-out infinite;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+/* Sleep overlay to mimic closed eyes / sleepy feel */
+#sleep-overlay {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Small tasks area */
+#task-area {
+  margin-top: 10px;
+}
+#task-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+#task-container {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Task input style */
+.task-name {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  background: #dcdcdc;
+  color: #111;
+}
+
+/* Small label */
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Animations */
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* When in break mode we apply a softened filter and show overlay */
+.break #cat-img {
+  animation: cat-breath 6s ease-in-out infinite,
+    cat-idle 6s ease-in-out infinite;
+  filter: brightness(0.98);
+}
+
+.break #sleep-overlay {
+  opacity: 1;
+  background-image: radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 255, 255, 0.07),
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 80% 60%,
+      rgba(255, 255, 255, 0.03),
+      transparent 20%
+    );
+}

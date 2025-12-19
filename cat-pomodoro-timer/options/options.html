@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="options.css" />
+    <title>Pawmodoro Options</title>
+  </head>
+  <body>
+    <div class="options-card">
+      <h1>⚙️ Pawmodoro Options</h1>
+
+      <div class="setting">
+        <label for="work-min">
+          <span class="icon">⏱️</span>
+          Work minutes
+        </label>
+        <input id="work-min" type="number" min="1" max="60" />
+      </div>
+
+      <div class="setting">
+        <label for="break-min">
+          <span class="icon">☕</span>
+          Break minutes
+        </label>
+        <input id="break-min" type="number" min="1" max="60" />
+      </div>
+
+      <div class="setting">
+        <label for="auto-start">
+          <span class="icon">⚙️</span>
+          Auto-start next session
+        </label>
+        <input id="auto-start" type="checkbox" />
+      </div>
+
+      <button id="save-btn">Save</button>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
