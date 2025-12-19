@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Cat Pomodoro Timer — Pawmodoro Focus & Productivity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple Pomodoro timer with a cute animated cat, focus sounds, and clean minimal UI.",
   "icons": {
     "16": "icon.png",
