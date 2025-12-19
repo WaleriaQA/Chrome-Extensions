@@ -40,9 +40,9 @@ function updateUI() {
       "breakMinutes",
       "lastSessionFinishedAt",
       "alarmAudio",
+      "startTimestamp",
     ],
     (res) => {
-      const timer = res.timer || 0;
       const isRunning = !!res.isRunning;
       const mode = res.mode || "work";
       const workMinutes = res.workMinutes || 25;
@@ -50,7 +50,12 @@ function updateUI() {
 
       // Set time text
       const totalMinutes = mode === "work" ? workMinutes : breakMinutes;
-      timeEl.textContent = formatRemaining(timer, totalMinutes);
+      let elapsedSeconds = res.timer || 0;
+      if (isRunning && res.startTimestamp) {
+        elapsedSeconds = Math.floor((Date.now() - res.startTimestamp) / 1000);
+      }
+
+      timeEl.textContent = formatRemaining(elapsedSeconds, totalMinutes);
 
       // Set button text
       startBtn.textContent = isRunning ? "Pause" : "Start";
@@ -64,16 +69,12 @@ function updateUI() {
 
       updateCat(mode);
 
-      // If lastSessionFinishedAt is recent (under 2 seconds), play sound
+      // Play sound if session just finished
       if (res.lastSessionFinishedAt) {
         const diff = Date.now() - res.lastSessionFinishedAt;
         if (diff < 2500) {
-          // play audio notification
           if (res.alarmAudio) {
-            // stored dataURL
             alarmAudio.src = res.alarmAudio;
-          } else {
-            // default already in source
           }
           alarmAudio.currentTime = 0;
           alarmAudio.play().catch(() => {});
@@ -88,29 +89,40 @@ setInterval(updateUI, 1000);
 
 function updateCat(mode) {
   const catImg = document.getElementById("cat-img");
-
-  if (mode === "work") {
-    catImg.src = "../images/cat_work.gif";
-  } else if (mode === "break") {
-    catImg.src = "../images/cat7.gif";
-  }
+  catImg.src =
+    mode === "work" ? "../images/cat_work.gif" : "../images/cat7.gif";
 }
 
 // Start/Pause toggle
 startBtn.addEventListener("click", () => {
-  chrome.storage.local.get(["isRunning"], (res) => {
-    chrome.storage.local.set({ isRunning: !res.isRunning });
+  chrome.storage.local.get(["isRunning", "timer", "startTimestamp"], (res) => {
+    if (!res.isRunning) {
+      const now = Date.now();
+      const elapsed = res.timer || 0;
+      chrome.storage.local.set({
+        isRunning: true,
+        startTimestamp: now - elapsed * 1000,
+      });
+    } else {
+      chrome.storage.local.set({
+        isRunning: false,
+      });
+    }
   });
 });
 
 // Reset button
 resetBtn.addEventListener("click", () => {
-  chrome.storage.local.set({ timer: 0, isRunning: false });
+  chrome.storage.local.set({
+    timer: 0,
+    isRunning: false,
+    startTimestamp: null,
+  });
 });
 
 // Tasks: load and display
 chrome.storage.sync.get(["tasks"], (res) => {
-  tasks = res.tasks ? res.tasks : [];
+  tasks = res.tasks || [];
   renderTasks();
 });
 
@@ -131,23 +143,17 @@ function renderTask(taskNum) {
   text.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-
       const value = text.value.trim();
       if (!value) return;
-
       tasks[taskNum] = value;
       saveTasks();
-
-      // If this is the last task, add a new one
       if (taskNum === tasks.length - 1) {
         tasks.push("");
         saveTasks();
         renderTasks();
-        // Auto-focus the newly added task
         setTimeout(() => {
           const inputs = document.querySelectorAll(".task-name");
-          const lastInput = inputs[inputs.length - 1];
-          lastInput?.focus();
+          inputs[inputs.length - 1]?.focus();
         }, 0);
       }
     }
@@ -188,12 +194,8 @@ audioInput.addEventListener("change", (e) => {
   const reader = new FileReader();
   reader.onload = function (ev) {
     const dataUrl = ev.target.result;
-
     chrome.storage.local.set(
-      {
-        alarmAudio: dataUrl,
-        alarmAudioName: file.name,
-      },
+      { alarmAudio: dataUrl, alarmAudioName: file.name },
       () => {
         alarmAudio.src = dataUrl;
         audioFilenameEl.textContent = `✅ ${file.name}`;

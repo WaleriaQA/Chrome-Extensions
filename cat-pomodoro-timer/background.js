@@ -13,22 +13,24 @@ chrome.alarms.onAlarm.addListener((alarm) => {
       "breakMinutes",
       "sessionsCompleted",
       "autoStart",
+      "startTimestamp",
     ],
     (res) => {
-      const timer = "timer" in res ? res.timer : 0;
-      const isRunning = "isRunning" in res ? res.isRunning : false;
+      const timer = res.timer || 0;
+      const isRunning = res.isRunning || false;
       const mode = res.mode || "work"; // 'work' or 'break'
       const workMinutes = res.workMinutes || 25;
       const breakMinutes = res.breakMinutes || 5;
       const sessionsCompleted = res.sessionsCompleted || 0;
       const autoStart = res.autoStart || false;
+      const startTimestamp = res.startTimestamp;
 
-      if (!isRunning) return;
+      if (!isRunning || !startTimestamp) return;
 
-      let newTimer = timer + 1;
+      const elapsedSeconds = Math.floor((Date.now() - startTimestamp) / 1000);
       const targetSeconds = (mode === "work" ? workMinutes : breakMinutes) * 60;
 
-      if (newTimer >= targetSeconds) {
+      if (elapsedSeconds >= targetSeconds) {
         // Session finished
         const nextMode = mode === "work" ? "break" : "work";
         const updatedSessions =
@@ -52,11 +54,12 @@ chrome.alarms.onAlarm.addListener((alarm) => {
           isRunning: !!autoStart,
           sessionsCompleted: updatedSessions,
           lastSessionFinishedAt: Date.now(),
+          startTimestamp: autoStart ? Date.now() : null,
         });
       } else {
         // just update timer
         chrome.storage.local.set({
-          timer: newTimer,
+          timer: elapsedSeconds,
         });
       }
     }
@@ -77,14 +80,13 @@ chrome.runtime.onInstalled.addListener(() => {
     ],
     (res) => {
       chrome.storage.local.set({
-        timer: "timer" in res ? res.timer : 0,
-        isRunning: "isRunning" in res ? res.isRunning : false,
-        mode: "mode" in res ? res.mode : "work",
-        workMinutes: "workMinutes" in res ? res.workMinutes : 25,
-        breakMinutes: "breakMinutes" in res ? res.breakMinutes : 5,
-        sessionsCompleted:
-          "sessionsCompleted" in res ? res.sessionsCompleted : 0,
-        autoStart: "autoStart" in res ? res.autoStart : false,
+        timer: res.timer || 0,
+        isRunning: res.isRunning || false,
+        mode: res.mode || "work",
+        workMinutes: res.workMinutes || 25,
+        breakMinutes: res.breakMinutes || 5,
+        sessionsCompleted: res.sessionsCompleted || 0,
+        autoStart: res.autoStart || false,
       });
     }
   );
